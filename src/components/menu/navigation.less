@@ -1,0 +1,30 @@
+@import '~less';
+
+.navigation {
+    height: 100vh; // vh 1% * 视口高度
+    min-width: 200px;
+
+    h1 {
+        color: @theme-color;
+        font-weight: bold;
+    }
+
+    .ant-menu {
+        border-inline-end: none !important;
+    }
+
+    .ant-menu-item-selected {
+        overflow: visible;
+        &::before {
+            position: absolute;
+            content: '';
+            background-color: @theme-color;
+            left: -25px;
+            top: 0px;
+            bottom: 0px;
+            width: 5px;
+            border-top-right-radius: 5px;
+            border-bottom-right-radius: 5px;
+        }
+    }
+}
