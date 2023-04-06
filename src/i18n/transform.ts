@@ -45,7 +45,7 @@ function transformZhToEn() {
         Object.keys(chMap)
             .sort((a, b) => a.localeCompare(b))
             .forEach((key) => {
-                sortedCh += `${key}=${chMap[key]}\n`;
+                sortedCh += `${key}=${chMap[key].replace("\n", "\\n")}\n`;
             });
         writeFileSync(resolve(__dirname, "./ch.properties"), sortedCh);
 
@@ -54,7 +54,11 @@ function transformZhToEn() {
         Object.keys(chMap)
             .sort((a, b) => a.localeCompare(b))
             .forEach((key) => {
-                sortedEn += `${key}=${en.get(key) || enMap[key]}\n`;
+                // @ts-ignore
+                sortedEn += `${key}=${(en.get(key) || enMap[key]).replace(
+                    /\n/g,
+                    "\\n"
+                )}\n`;
             });
         writeFileSync(resolve(__dirname, "./en.properties"), sortedEn);
     }
@@ -74,4 +78,13 @@ function transformZhToEn() {
         });
 }
 
-transformZhToEn();
+function getAllN() {
+    const ch = propertiesReader(resolve(__dirname, "../i18n/ch.properties"));
+    const chMap: Record<string, string> = {};
+    ch.each((key: any, value: any) => {
+        `${value}`.indexOf('\\n') !== -1 && (chMap[key] = value);
+    });
+    console.log(Object.keys(chMap));
+}
+getAllN();
+// transformZhToEn();
