@@ -1,15 +1,19 @@
 import { Component } from "react";
 import { Routes, Route, NavLink } from 'react-router-dom';
-import PlantFamily from "../plant_family/PlantFamily";
 import { Col, Row } from "antd";
 import './home.less';
+import Clothes from "../clothes/Clothes";
+import Pants from "../pants/Pants";
+import Books from "../books/Books";
 
 class PlatHome extends Component {
     render() {
         return (
             <Routes>
                 <Route path="/" element={this.createHome()} />
-                <Route path="/plant_family" element={<PlantFamily />} />
+                <Route path="/clothes" element={<Clothes />} />
+                <Route path="/pants" element={<Pants />} />
+                <Route path="/books" element={<Books />} />
             </Routes>
         )
     }
@@ -59,7 +63,7 @@ class PlatHome extends Component {
         );
     }
 
-    private create
+    // private create
 }
 
 export default PlatHome;

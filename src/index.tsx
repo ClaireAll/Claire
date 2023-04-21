@@ -18,9 +18,9 @@ const root = ReactDOM.createRoot(
 
 root.render(
 	<BrowserRouter>
-		<Row>
-			<Col span={5} className="router"><Navigation /></Col>
-			<Col span={19}><PlatHome /></Col>
+		<Row wrap={false} className='claire-home'>
+			<Col span={5} className='claire-navigation'><Navigation /></Col>
+			<Col span={19} className='claire-content'><PlatHome /></Col>
 		</Row>
 	</BrowserRouter>
 );

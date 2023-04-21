@@ -1,12 +1,27 @@
 @import '~less';
 
 .navigation {
-    height: 100vh; // vh 1% * 视口高度
-    min-width: 200px;
+    height: 100%; // vh 1% * 视口高度
 
-    h1 {
-        color: @theme-color;
-        font-weight: bold;
+    .header-container {
+        height: 10vh;
+        margin-bottom: 24px;
+        display: flex;
+        align-items: center;
+        span {
+            color: @theme-color;
+            font-weight: bold;
+            font-size: 2rem;
+            padding-left: 10px;
+        }
+
+        img {
+            border-radius: 5vh;
+            &:hover {
+                transform: scale(1.2);
+            }
+            background-color: #ffffff;
+        }
     }
 
     .ant-menu {

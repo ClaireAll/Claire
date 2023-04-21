@@ -17,9 +17,20 @@ code {
 
 #root {
 	height: 100%;
+	overflow: scroll;
 	background-color: @background;
 }
 
-.router {
-	height: 100%;
+.claire-home {
+	padding: 20px;
+	.claire-navigation {
+		height: calc(100vh - 40px);
+		min-width: 200px;
+	}
+
+	.claire-content {
+		padding-left: 20px;
+		height: calc(100vh - 40px);
+		min-width: 800px;
+	}
 }

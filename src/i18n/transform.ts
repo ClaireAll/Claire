@@ -27,15 +27,19 @@ const translate = (q: string) => {
     });
 };
 
+transformZhToEn();
+
 function transformZhToEn() {
     const ch = propertiesReader(resolve(__dirname, "../i18n/ch.properties"));
     const en = propertiesReader(resolve(__dirname, "../i18n/en.properties"));
     const chMap: Record<string, string> = {};
     const gapMap: Record<string, string> = {};
     const enMap: Record<string, string> = {};
+    const enKeys = Object.keys(en.getAllProperties());
     ch.each((key: any, value: any) => {
         chMap[key] = value;
-        !en.get(key) && (gapMap[key] = value);
+
+        !enKeys.includes(key) && (gapMap[key] = value);
     });
 
     // 排序
@@ -54,6 +58,10 @@ function transformZhToEn() {
         Object.keys(chMap)
             .sort((a, b) => a.localeCompare(b))
             .forEach((key) => {
+// @ts-ignore
+                if (!((en.get(key) || enMap[key]).replace)) {
+                    console.log(en.get(key) || enMap[key]);
+                }
                 // @ts-ignore
                 sortedEn += `${key}=${(en.get(key) || enMap[key]).replace(
                     /\n/g,
@@ -63,28 +71,17 @@ function transformZhToEn() {
         writeFileSync(resolve(__dirname, "./en.properties"), sortedEn);
     }
 
-    console.log(gapMap);
+    sortFile();
 
-    Object.keys(gapMap).length !== 0 &&
-        translate(Object.values(gapMap).join("#")).then((res: any) => {
-            const result = res.data.trans_result[0].dst.split("#");
-            let text = "";
-            Object.keys(gapMap).forEach((key, i) => {
-                enMap[key] = result[i];
-                text += `${key}=${result[i].trim()}\n`;
-            });
-            text && appendFileSync(resolve(__dirname, "./en.properties"), text);
-            sortFile();
-        });
+    // Object.keys(gapMap).length !== 0 &&
+    //     translate(Object.values(gapMap).join("#")).then((res: any) => {
+    //         const result = res.data.trans_result[0].dst.split("#");
+    //         let text = "";
+    //         Object.keys(gapMap).forEach((key, i) => {
+    //             enMap[key] = result[i];
+    //             text += `${key}=${result[i].trim()}\n`;
+    //         });
+    //         text && appendFileSync(resolve(__dirname, "./en.properties"), text);
+    //         sortFile();
+    //     });
 }
-
-function getAllN() {
-    const ch = propertiesReader(resolve(__dirname, "../i18n/ch.properties"));
-    const chMap: Record<string, string> = {};
-    ch.each((key: any, value: any) => {
-        `${value}`.indexOf('\\n') !== -1 && (chMap[key] = value);
-    });
-    console.log(Object.keys(chMap));
-}
-getAllN();
-// transformZhToEn();
