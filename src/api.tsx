@@ -1,6 +1,11 @@
 import { Quarter } from "./common/enum";
 
+/** 接口根地址 */
 export const ROOT = "http://localhost:9000";
+
+/**
+ * 调用封装
+ */
 
 export function claireGet(url: string) {
     return fetch(`${ROOT}${url}`)
@@ -29,6 +34,11 @@ export function clairePost(url: string, data: any) {
         .catch((err) => console.log(err));
 }
 
+
+/**
+ * 接口列表
+ */
+
 export interface ClothesAddData {
     /** 图片名称 */
     pic: string;
@@ -37,6 +47,13 @@ export interface ClothesAddData {
     /** 适用季节 */
     quarter: Quarter;
 }
+
+/**
+ * 额外的请求
+ */
+/**
+ * http://localhost:9000/upload  post 传入文件 上传一张图片存到服务器
+ */
 
 /**
  * 添加衣服
