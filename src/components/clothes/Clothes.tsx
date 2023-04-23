@@ -1,8 +1,10 @@
-import { Card, Col, Row, Image, Button, Modal, Form } from "antd";
+import { Card, Col, Row, Image, Button, message } from "antd";
 import "./clothes.less";
-import { ROOT, claireGet } from "../../api";
+import { ROOT, addClothes, getClothesList } from "../../api";
 import { Component } from "react";
-import Dragger from "antd/es/upload/Dragger";
+import { Claire, Quarter } from "../../common/enum";
+import _ from "lodash";
+import ClothesPopup, { ClothesPopupState } from "./popup/ClothesPopup";
 
 interface ClothesList {
     id: string;
@@ -13,7 +15,19 @@ interface ClothesList {
 
 interface StateList {
     clothesList: ClothesList[];
-    showAddModal: boolean;
+    query: {
+        price: {
+            min?: number;
+            max?: number;
+        };
+        addDate: {
+            min?: string;
+            max?: string;
+        };
+        quarters: Quarter[];
+        page: number;
+        pageSize: number;
+    };
 }
 
 class Clothes extends Component<any, StateList> {
@@ -21,18 +35,43 @@ class Clothes extends Component<any, StateList> {
         super(props);
         this.state = {
             clothesList: [],
-            showAddModal: false,
+            query: {
+                price: {},
+                addDate: {},
+                quarters: [],
+                page: 1,
+                pageSize: Claire.pageSize,
+            },
         };
     }
 
+    private popup!: ClothesPopup;
+
     componentDidMount() {
-        claireGet("/clothes/list").then((res: any) => {
+        this.getList();
+    }
+
+    getList() {
+        getClothesList(this.state.query).then((res: any) => {
             this.setState({ clothesList: res.data });
         });
     }
 
-    setShowAddModal(show: boolean): void {
-        this.setState({ showAddModal: show });
+    handleAdd(data: ClothesPopupState) {
+        if (_.isEmpty(data.uploadImgSrc)) {
+            message.warning("主人，请上传一张图片哦~");
+        } else {
+            const { uploadImgSrc, price, quarter } = data;
+            const query = {
+                pic: uploadImgSrc,
+                price,
+                quarter,
+            };
+            addClothes(query).then((res: any) => {
+                message.success("添加成功~");
+                this.getList();
+            });
+        }
     }
 
     render() {
@@ -44,43 +83,19 @@ class Clothes extends Component<any, StateList> {
                         <Button
                             type="primary"
                             onClick={() => {
-                                this.setShowAddModal(true);
+                                this.popup.open(
+                                    {
+                                        url: "",
+                                        price: "",
+                                        quarter: Quarter.Spring,
+                                    },
+                                    (data: ClothesPopupState) => this.handleAdd(data)
+                                );
                             }}
                         >
                             添加
                         </Button>
-                        <Modal
-                            title="添加"
-                            open={this.state.showAddModal}
-                            onCancel={() => this.setShowAddModal(false)}
-                        >
-                            <Form>
-                                <Form.Item
-                                    label="图片"
-                                    rules={[
-                                        {
-                                            required: true,
-                                            message: "请上传图片",
-                                        },
-                                    ]}
-                                >
-                                    <Dragger
-                                        accept="image/*"
-                                        name="file"
-                                        multiple={false}
-                                        action={`${ROOT}/upload`}
-                                        onChange={(info) => {
-                                            console.log(info);
-                                        }}
-                                        onDrop={(info) => {
-                                            console.log(info);
-                                        }}
-                                    >
-                                        点击或拖拽以上传图片
-                                    </Dragger>
-                                </Form.Item>
-                            </Form>
-                        </Modal>
+                        <ClothesPopup ref={(ref) => (this.popup = ref!)} />
                     </Card>
                 </div>
                 <div className="clothes">
@@ -92,7 +107,7 @@ class Clothes extends Component<any, StateList> {
                                     key={clothes.id}
                                     span={6}
                                 >
-                                    <Image src={clothes.pic} />
+                                    <Image src={`${ROOT}/${clothes.pic}`} />
                                 </Col>
                             ))}
                         </Row>
