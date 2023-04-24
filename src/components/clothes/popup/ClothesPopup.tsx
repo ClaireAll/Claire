@@ -1,8 +1,8 @@
 import { Form, Modal, Image, InputNumber, Radio } from "antd";
 import { Component, ReactNode } from "react";
-import { ROOT, deleteOnePic } from "../../../api";
+import { ROOT, deleteOnePic } from "@api";
 import _ from "lodash";
-import { Quarter, Status } from "../../../common/enum";
+import { Quarter, Status } from "@enum";
 import Dragger from "antd/es/upload/Dragger";
 import { PlusOutlined } from "@ant-design/icons";
 

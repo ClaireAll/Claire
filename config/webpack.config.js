@@ -335,6 +335,9 @@ module.exports = function (webpackEnv) {
                 }),
                 ...(modules.webpackAliases || {}),
                 less: path.resolve(__dirname, '../src/less/common.less'),
+                '@enum': path.resolve(__dirname, '../src/common/enum.tsx'),
+                '@font': path.resolve(__dirname, '../src/assets/font/font.tsx'),
+                '@api': path.resolve(__dirname, '../src/api.tsx'),
             },
             plugins: [
                 // Prevents users from importing files from outside of src/ (or node_modules/).

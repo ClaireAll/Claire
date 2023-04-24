@@ -21,7 +21,10 @@
 		"jsx": "react-jsx",
 		"baseUrl": ".",
 		"paths": {
-			"@less/*": ["src/less/*"]
+			"@less/*": ["src/less/*"],
+			"@enum": ["src/common/enum.tsx"],
+            "@font": ["src/assets/font/font.tsx"],
+			"@api": ["src/api.tsx"]
 		},
 	},
 	"include": [

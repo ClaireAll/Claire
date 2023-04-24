@@ -1,8 +1,8 @@
 import { Card, Col, Row, Image, Button, message } from "antd";
 import "./clothes.less";
-import { ROOT, addClothes, getClothesList } from "../../api";
+import { ROOT, addClothes, getClothesList } from "@api";
 import { Component } from "react";
-import { Claire, Quarter } from "../../common/enum";
+import { Claire, Quarter } from "@enum";
 import _ from "lodash";
 import ClothesPopup, { ClothesPopupState } from "./popup/ClothesPopup";
 

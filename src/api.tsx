@@ -1,4 +1,4 @@
-import { Quarter } from "./common/enum";
+import { Quarter } from "@enum";
 
 /** 接口根地址 */
 export const ROOT = "http://localhost:9000";
