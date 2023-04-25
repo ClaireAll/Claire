@@ -5,9 +5,16 @@ import ClaireIcon from "../assets/font/font";
 
 export const Claire = {
     /** 主页显示 */
-    name: 'Claire',
+    name: "Claire",
     /** 单页数量 */
     pageSize: 8,
+    /** 季节对应 */
+    quarterMap: {
+        1: "春",
+        2: "夏",
+        3: "秋",
+        4: "冬",
+    },
 };
 
 /** 导航 */
@@ -71,4 +78,22 @@ export enum Operate {
     Delete = 2,
     Edit = 3,
     Query = 4,
+}
+
+/** 时间格式 */
+export enum DateType {
+    Y = "YYYY",
+    M = "M",
+    D = "D",
+    Y_M = "YYYY-MM",
+    Y_M_D = "YYYY-MM-DD",
+    Y_M_D_H_M_S = "YYYY-MM-DD HH:MM:SS",
+}
+
+/** 排列方式 */
+export enum ShowType {
+    /** 卡片视图 */
+    Card = 'card',
+    /** 表格视图 */
+    Table = 'table',
 }

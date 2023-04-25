@@ -1,192 +1,151 @@
+import { MutableRefObject, useImperativeHandle, useState } from "react";
+import { Quarter, Status } from "@enum";
 import { Form, Modal, Image, InputNumber, Radio } from "antd";
-import { Component, ReactNode } from "react";
+import Dragger from "antd/es/upload/Dragger";
 import { ROOT, deleteOnePic } from "@api";
 import _ from "lodash";
-import { Quarter, Status } from "@enum";
-import Dragger from "antd/es/upload/Dragger";
 import { PlusOutlined } from "@ant-design/icons";
 
-export interface ClothesPopupState {
+export interface ClothesPopupData {
+    url: string;
     price: number;
-    uploadImgSrc: string;
     quarter: Quarter;
-    showAddModal: boolean;
-    save: Function;
 }
 
-class ClothesPopup extends Component<any, ClothesPopupState> {
-    constructor(props: any) {
-        super(props);
-        this.state = {
-            price: 0,
-            uploadImgSrc: "",
-            quarter: Quarter.Spring,
-            showAddModal: false,
-            save: () => {},
-        };
-    }
+export function ClothesPopup({ ref }: { ref: MutableRefObject<any> }) {
+    const [price, setPrice] = useState(0);
+    const [url, setUrl] = useState(""); // 图片名称
+    const [quarter, setQuarter] = useState(Quarter.Spring);
+    const [showModel, setShowModel] = useState(false);
+    let save: Function = () => {};
 
-    setShowAddModal(show: boolean) {
-        this.setState({ showAddModal: show, uploadImgSrc: "" });
-    }
+    useImperativeHandle(ref, () => ({
+        open: (data: ClothesPopupData, operate: Function) => {
+            const { url, price, quarter } = data;
 
-    handleUpload(info: any) {
+            setUrl(url);
+            setPrice(price);
+            setQuarter(quarter);
+            setShowModel(true);
+            save = operate;
+        },
+    }));
+
+    const deletePic = () => {
+        !_.isEmpty(url) && deleteOnePic(url);
+    };
+
+    const handleUpload = (info: any) => {
         const { file } = info;
         if (file.status === Status.Done) {
-            this.deletePic();
-            this.setState({
-                uploadImgSrc: file.response.data.name,
-            });
+            deletePic();
+            setUrl(file.response.data.name);
         }
-    }
+    };
 
-    handleRemove(info: any) {
+    const handleRemove = (info: any) => {
         if (info.status === Status.Done) {
-            this.deletePic();
-            this.setState({
-                uploadImgSrc: "",
-            });
+            deletePic();
+            setUrl("");
         }
-    }
+    };
 
-    deletePic() {
-        !_.isEmpty(this.state.uploadImgSrc) &&
-            deleteOnePic(this.state.uploadImgSrc);
-    }
-
-    render(): ReactNode {
-        return (
-            <Modal
-                title="添加"
-                className="add-container"
-                open={this.state.showAddModal}
-                onCancel={() => this.setShowAddModal(false)}
-                onOk={() => {
-                    this.state.save(this.state);
-                    this.setShowAddModal(false);
-                }}
-            >
-                <Form labelAlign="left" labelCol={{ span: 4 }}>
-                    <Form.Item
-                        label="图片"
-                        required
-                        rules={[
-                            {
-                                required: true,
-                                message: "请上传图片",
-                            },
-                        ]}
+    return (
+        <Modal
+            title="添加"
+            className="add-container"
+            open={showModel}
+            onCancel={() => setShowModel(false)}
+            onOk={() => {
+                save({ url: url, price, quarter });
+                setShowModel(false);
+            }}
+        >
+            <Form labelAlign="left" labelCol={{ span: 4 }}>
+                <Form.Item
+                    label="图片"
+                    required
+                    rules={[
+                        {
+                            required: true,
+                            message: "请上传图片",
+                        },
+                    ]}
+                >
+                    <Dragger
+                        className="img-uploader"
+                        accept="image/*"
+                        name="file"
+                        multiple={false}
+                        maxCount={1}
+                        action={`${ROOT}/upload`}
+                        showUploadList={!_.isEmpty(url)}
+                        onChange={(info) => {
+                            handleUpload(info);
+                        }}
+                        onDrop={(info) => {
+                            handleUpload(info);
+                        }}
+                        onRemove={(info) => {
+                            handleRemove(info);
+                        }}
                     >
-                        <Dragger
-                            className="img-uploader"
-                            accept="image/*"
-                            name="file"
-                            multiple={false}
-                            maxCount={1}
-                            action={`${ROOT}/upload`}
-                            showUploadList={!_.isEmpty(this.state.uploadImgSrc)}
-                            onChange={(info) => {
-                                this.handleUpload(info);
+                        <Image
+                            preview={false}
+                            width={100}
+                            height={100}
+                            style={{
+                                position: "absolute",
+                                top: "-17px",
+                                left: "-1px",
+                                borderRadius: "10px",
+                                display: _.isEmpty(url) ? "none" : "block",
                             }}
-                            onDrop={(info) => {
-                                this.handleUpload(info);
-                            }}
-                            onRemove={(info) => {
-                                this.handleRemove(info);
-                            }}
-                        >
-                            <Image
-                                preview={false}
-                                width={100}
-                                height={100}
-                                style={{
-                                    position: "absolute",
-                                    top: "-17px",
-                                    left: "-1px",
-                                    borderRadius: "10px",
-                                    display: _.isEmpty(this.state.uploadImgSrc)
-                                        ? "none"
-                                        : "block",
-                                }}
-                                src={`${ROOT}/${this.state.uploadImgSrc}`}
-                            />
-                            <PlusOutlined
-                                className="tip"
-                                style={{
-                                    position: "absolute",
-                                    top: "10px",
-                                    left: "35px",
-                                    fontSize: "30px",
-                                    display: _.isEmpty(this.state.uploadImgSrc)
-                                        ? "block"
-                                        : "none",
-                                }}
-                            />
-                            <p
-                                style={{
-                                    position: "absolute",
-                                    top: "40px",
-                                    padding: "0 10px",
-                                    display: _.isEmpty(this.state.uploadImgSrc)
-                                        ? "block"
-                                        : "none",
-                                }}
-                                className="tip"
-                            >
-                                点击或拖拽以上传图片
-                            </p>
-                        </Dragger>
-                    </Form.Item>
-                    <Form.Item label="价格">
-                        <InputNumber
-                            value={this.state.price}
-                            onChange={(v) => {
-                                this.setState({ price: v as number });
+                            src={`${ROOT}/${url}`}
+                        />
+                        <PlusOutlined
+                            className="tip"
+                            style={{
+                                position: "absolute",
+                                top: "10px",
+                                left: "35px",
+                                fontSize: "30px",
+                                display: _.isEmpty(url) ? "block" : "none",
                             }}
                         />
-                    </Form.Item>
-                    <Form.Item label="季节">
-                        <Radio.Group
-                            onChange={(e) =>
-                                this.setState({
-                                    quarter: e.target.value,
-                                })
-                            }
-                            value={this.state.quarter}
+                        <p
+                            style={{
+                                position: "absolute",
+                                top: "40px",
+                                padding: "0 10px",
+                                display: _.isEmpty(url) ? "block" : "none",
+                            }}
+                            className="tip"
                         >
-                            <Radio.Button value={Quarter.Spring}>
-                                春
-                            </Radio.Button>
-                            <Radio.Button value={Quarter.Summer}>
-                                夏
-                            </Radio.Button>
-                            <Radio.Button value={Quarter.Autumn}>
-                                秋
-                            </Radio.Button>
-                            <Radio.Button value={Quarter.Winter}>
-                                冬
-                            </Radio.Button>
-                        </Radio.Group>
-                    </Form.Item>
-                </Form>
-            </Modal>
-        );
-    }
-
-    getValue() {
-        return this.state;
-    }
-
-    open(data: any, operate: Function) {
-        const { url, price, quarter } = data;
-        this.setState({
-            uploadImgSrc: url,
-            price,
-            quarter,
-            showAddModal: true,
-            save: operate,
-        });
-    }
+                            点击或拖拽以上传图片
+                        </p>
+                    </Dragger>
+                </Form.Item>
+                <Form.Item label="价格">
+                    <InputNumber
+                        value={price}
+                        onChange={(v) => {
+                            setPrice(v as number);
+                        }}
+                    />
+                </Form.Item>
+                <Form.Item label="季节">
+                    <Radio.Group
+                        onChange={(e) => setQuarter(e.target.value)}
+                        value={quarter}
+                    >
+                        <Radio.Button value={Quarter.Spring}>春</Radio.Button>
+                        <Radio.Button value={Quarter.Summer}>夏</Radio.Button>
+                        <Radio.Button value={Quarter.Autumn}>秋</Radio.Button>
+                        <Radio.Button value={Quarter.Winter}>冬</Radio.Button>
+                    </Radio.Group>
+                </Form.Item>
+            </Form>
+        </Modal>
+    );
 }
-
-export default ClothesPopup;

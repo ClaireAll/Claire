@@ -1,121 +1,119 @@
-import { Card, Col, Row, Image, Button, message } from "antd";
+import { Card, Col, Row, Image, Button, message, Pagination } from "antd";
 import "./clothes.less";
 import { ROOT, addClothes, getClothesList } from "@api";
-import { Component } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Claire, Quarter } from "@enum";
 import _ from "lodash";
-import ClothesPopup, { ClothesPopupState } from "./popup/ClothesPopup";
+import { getFormatDate } from "@service";
+import { ClothesPopup, ClothesPopupData } from "./popup/ClothesPopup";
 
 interface ClothesList {
     id: string;
     pic: string;
     price: number;
-    color: number;
+    quarter: Quarter;
+    date: number;
 }
 
-interface StateList {
-    clothesList: ClothesList[];
-    query: {
-        price: {
-            min?: number;
-            max?: number;
-        };
-        addDate: {
-            min?: string;
-            max?: string;
-        };
-        quarters: Quarter[];
-        page: number;
-        pageSize: number;
-    };
-}
-
-class Clothes extends Component<any, StateList> {
-    constructor(props: any) {
-        super(props);
-        this.state = {
-            clothesList: [],
-            query: {
-                price: {},
-                addDate: {},
-                quarters: [],
-                page: 1,
-                pageSize: Claire.pageSize,
-            },
-        };
-    }
-
-    private popup!: ClothesPopup;
-
-    componentDidMount() {
-        this.getList();
-    }
-
-    getList() {
-        getClothesList(this.state.query).then((res: any) => {
-            this.setState({ clothesList: res.data });
+export function Clothes() {
+    const modelRef = useRef();
+    const [query, setQuery] = useState({price: {},
+        addDate: {},
+        quarters: [],
+        page: 1,
+        pageSize: Claire.pageSize,});
+    const [total, setTotal] = useState(0);
+    const [clothesList, setList] = useState([]);
+    const getList = () => {
+        getClothesList(query).then((res: any) => {
+            const { list, total } = res.data || {};
+            setTotal(total);
+            setList(list);
         });
     }
 
-    handleAdd(data: ClothesPopupState) {
-        if (_.isEmpty(data.uploadImgSrc)) {
+    useEffect(getList, [query]); // 模拟componentDidMount
+
+    const handleAdd = (data: ClothesPopupData) => {
+        if (_.isEmpty(data.url)) {
             message.warning("主人，请上传一张图片哦~");
         } else {
-            const { uploadImgSrc, price, quarter } = data;
+            const { url, price, quarter } = data;
             const query = {
-                pic: uploadImgSrc,
+                pic: url,
                 price,
                 quarter,
             };
             addClothes(query).then((res: any) => {
                 message.success("添加成功~");
-                this.getList();
+                getList();
             });
         }
     }
 
-    render() {
-        return (
-            <div className="clothes-container">
-                <div className="filter">
-                    <Card>
-                        筛选
-                        <Button
-                            type="primary"
-                            onClick={() => {
-                                this.popup.open(
-                                    {
-                                        url: "",
-                                        price: "",
-                                        quarter: Quarter.Spring,
-                                    },
-                                    (data: ClothesPopupState) => this.handleAdd(data)
-                                );
-                            }}
-                        >
-                            添加
-                        </Button>
-                        <ClothesPopup ref={(ref) => (this.popup = ref!)} />
-                    </Card>
-                </div>
-                <div className="clothes">
-                    <Card>
-                        <Row justify="space-around" gutter={20}>
-                            {this.state.clothesList.map((clothes) => (
-                                <Col
-                                    className="clothes-single"
-                                    key={clothes.id}
-                                    span={6}
-                                >
-                                    <Image src={`${ROOT}/${clothes.pic}`} />
-                                </Col>
-                            ))}
-                        </Row>
-                    </Card>
-                </div>
+    return (
+        <div className="clothes-container">
+            <div className="filter">
+                <Card>
+                    筛选
+                    <Button
+                        type="primary"
+                        onClick={() => {
+                            // @ts-ignore
+                            modelRef.current.open(
+                                {
+                                    url: "",
+                                    price: 0,
+                                    quarter: Quarter.Spring,
+                                },
+                                (data: ClothesPopupData) =>
+                                    handleAdd(data)
+                            );
+                        }}
+                    >
+                        添加
+                    </Button>
+                    <ClothesPopup ref={modelRef} />
+                </Card>
             </div>
-        );
-    }
+            <div className="clothes">
+                <Card>
+                    <Row justify="start" gutter={20}>
+                        {clothesList.map((clothes: ClothesList) => (
+                            <Col
+                                className="clothes-single"
+                                key={clothes.id}
+                                span={6}
+                            >
+                                <Image
+                                    src={`${ROOT}/${clothes.pic}`}
+                                    title={`价格：${clothes.price}\n季节：${
+                                        Claire.quarterMap[clothes.quarter]
+                                    }\n添加日期：${getFormatDate(
+                                        `${clothes.date}`
+                                    )}`}
+                                />
+                            </Col>
+                        ))}
+                    </Row>
+                    <Row justify="end">
+                        <Pagination
+                            simple
+                            pageSize={Claire.pageSize}
+                            current={query.page}
+                            total={total}
+                            onChange={(index: number) => {
+                                const data = Object.assign(
+                                    {},
+                                    query,
+                                    { page: index }
+                                );
+                                setQuery(data);
+                            }}
+                        />
+                    </Row>
+                </Card>
+            </div>
+        </div>
+    );
 }
-
-export default Clothes;

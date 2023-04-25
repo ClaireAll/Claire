@@ -1,33 +1,12 @@
-import { Component } from "react";
 import { Routes, Route, NavLink } from 'react-router-dom';
 import { Col, Row } from "antd";
 import './home.less';
-import Clothes from "../clothes/Clothes";
-import Pants from "../pants/Pants";
-import Books from "../books/Books";
+import { Clothes } from '../clothes/Clothes';
+import { Pants } from '../pants/Pants';
+import { Books } from '../books/Books';
 
-class PlatHome extends Component {
-    render() {
-        return (
-            <Routes>
-                <Route path="/" element={this.createHome()} />
-                <Route path="/clothes" element={<Clothes />} />
-                <Route path="/pants" element={<Pants />} />
-                <Route path="/books" element={<Books />} />
-            </Routes>
-        )
-    }
-
-    private createHome() {
-        return (
-            <div style={{margin: '24px'}} className="plant-home">
-                {this.createHeader()}
-                {this.createPics()}
-            </div>
-        );
-    }
-
-    private createHeader() {
+export function PlatHome() {
+    const createHeader = () => {
         return (
             <Row gutter={20} style={{height: '10vh', marginBottom: '24px'}}>
                 <Col span={18}>
@@ -43,7 +22,7 @@ class PlatHome extends Component {
         );
     }
 
-    private createPics() {
+    const createPics = () => {
         return (
             <Row gutter={20} style={{height: '30vh'}}>
                 <Col span={16}>
@@ -63,7 +42,21 @@ class PlatHome extends Component {
         );
     }
 
-    // private create
-}
+    const createHome = () => {
+        return (
+            <div style={{margin: '24px'}} className="plant-home">
+                {createHeader()}
+                {createPics()}
+            </div>
+        );
+    }
 
-export default PlatHome;
+    return (
+        <Routes>
+            <Route path="/" element={createHome()} />
+            <Route path="/clothes" element={<Clothes />} />
+            <Route path="/pants" element={<Pants />} />
+            <Route path="/books" element={<Books />} />
+        </Routes>
+    )
+}

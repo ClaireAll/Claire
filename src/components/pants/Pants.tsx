@@ -1,9 +1,3 @@
-import { Component } from "react";
-
-class Pants extends Component {
-    render() {
-        return (<div>pants</div>);
-    }
+export function Pants() {
+    return (<div>pants</div>);
 }
-
-export default Pants;

@@ -3,9 +3,9 @@ import reportWebVitals from './reportWebVitals';
 import './index.less';
 import 'antd/dist/reset.css';
 import { Col, ConfigProvider, Row } from 'antd';
-import Navigation from 'src/components/menu/Navigation';
-import PlatHome from './components/home/Home';
 import { BrowserRouter } from 'react-router-dom';
+import { PlatHome } from './components/home/Home';
+import { Navigation } from './components/menu/Navigation';
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
