@@ -1,5 +1,5 @@
-import { MutableRefObject, useImperativeHandle, useState } from "react";
-import { Quarter, Status } from "@enum";
+import { forwardRef, useImperativeHandle, useState } from "react";
+import { Operate, Quarter, Status } from "@enum";
 import { Form, Modal, Image, InputNumber, Radio } from "antd";
 import Dragger from "antd/es/upload/Dragger";
 import { ROOT, deleteOnePic } from "@api";
@@ -12,22 +12,21 @@ export interface ClothesPopupData {
     quarter: Quarter;
 }
 
-export function ClothesPopup({ ref }: { ref: MutableRefObject<any> }) {
+let ClothesPopup = (props: any, ref: any) => {
+    const { addFunc, popupType } = props;
     const [price, setPrice] = useState(0);
     const [url, setUrl] = useState(""); // 图片名称
     const [quarter, setQuarter] = useState(Quarter.Spring);
     const [showModel, setShowModel] = useState(false);
-    let save: Function = () => {};
 
     useImperativeHandle(ref, () => ({
-        open: (data: ClothesPopupData, operate: Function) => {
+        open: (data: ClothesPopupData) => {
             const { url, price, quarter } = data;
 
             setUrl(url);
             setPrice(price);
             setQuarter(quarter);
             setShowModel(true);
-            save = operate;
         },
     }));
 
@@ -36,7 +35,7 @@ export function ClothesPopup({ ref }: { ref: MutableRefObject<any> }) {
     };
 
     const handleUpload = (info: any) => {
-        const { file } = info;
+        const { file } = info || {};
         if (file.status === Status.Done) {
             deletePic();
             setUrl(file.response.data.name);
@@ -57,7 +56,7 @@ export function ClothesPopup({ ref }: { ref: MutableRefObject<any> }) {
             open={showModel}
             onCancel={() => setShowModel(false)}
             onOk={() => {
-                save({ url: url, price, quarter });
+                popupType === Operate.Add && addFunc({ url: url, price, quarter });
                 setShowModel(false);
             }}
         >
@@ -81,9 +80,6 @@ export function ClothesPopup({ ref }: { ref: MutableRefObject<any> }) {
                         action={`${ROOT}/upload`}
                         showUploadList={!_.isEmpty(url)}
                         onChange={(info) => {
-                            handleUpload(info);
-                        }}
-                        onDrop={(info) => {
                             handleUpload(info);
                         }}
                         onRemove={(info) => {
@@ -149,3 +145,7 @@ export function ClothesPopup({ ref }: { ref: MutableRefObject<any> }) {
         </Modal>
     );
 }
+
+// @ts-ignore
+ClothesPopup = forwardRef(ClothesPopup);
+export default ClothesPopup;

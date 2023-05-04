@@ -2,6 +2,7 @@
 
 .clothes-container {
     height: 100%;
+
     .filter {
         height: 15%;
 
@@ -18,12 +19,48 @@
             height: 100%;
         }
 
+        .clothes-list {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            right: 20px;
+            bottom: 6vh;
+        }
+
+        .clothes-pager {
+            position: absolute;
+            left: 20px;
+            right: 20px;
+            bottom: 0px;
+            height: 6vh;
+        }
+
         .clothes-single {
             margin-bottom: 20px;
+
             & img {
                 width: 30vh;
                 height: 30vh;
+                border-radius: 2vh;
+                box-shadow: 0 0 10px 0 @theme-deep-color;
             }
+
+            .clothes-tools {
+                position: absolute;
+                top: -10px;
+                right: 15px;
+                .error-icon {
+                    display: block;
+                }
+            }
+        }
+
+        .tip {
+            font-size: 20px;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%,-50%);
         }
     }
 }

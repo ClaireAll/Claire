@@ -11,7 +11,7 @@ export function Navigation() {
                 <span className="home-title">{Claire.name}</span>
             </div>
             <nav>
-                <Menu mode="inline" items={ClaireNavigator} />
+                <Menu defaultSelectedKeys={[Claire.navigatorKey.home]} mode="inline" items={ClaireNavigator} />
             </nav>
         </Card>
     );

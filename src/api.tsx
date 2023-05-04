@@ -1,4 +1,4 @@
-import { Quarter } from "@enum";
+import { Quarter, SortType } from "@enum";
 
 /** 接口根地址 */
 export const ROOT = "http://localhost:9000";
@@ -21,6 +21,15 @@ export function claireDelete(url: string) {
         .catch((err) => console.log(err));
 }
 
+export function claireMultiDelete(url: string, data: any) {
+    return fetch(`${ROOT}${url}`, {
+        method: "DELETE",
+        body: JSON.stringify(data),
+    })
+        .then((res) => res.json())
+        .catch((err) => console.log(err));
+}
+
 export function clairePost(url: string, data: any) {
     return fetch(`${ROOT}${url}`, {
         method: "POST",
@@ -28,12 +37,11 @@ export function clairePost(url: string, data: any) {
         mode: "cors",
         headers: {
             contentType: "application/json",
-        }
+        },
     })
         .then((res) => res.json())
         .catch((err) => console.log(err));
 }
-
 
 /**
  * 接口列表
@@ -74,6 +82,7 @@ export interface ClothesListQuery {
     price: {
         min?: number;
         max?: number;
+        sort?: SortType;
     };
     /** 适用季节 */
     quarters: Quarter[];
@@ -81,6 +90,7 @@ export interface ClothesListQuery {
     addDate: {
         min?: string;
         max?: string;
+        sort?: SortType;
     };
     page: number;
     pageSize: number;
@@ -90,4 +100,13 @@ export interface ClothesListQuery {
  */
 export function getClothesList(query: ClothesListQuery) {
     return clairePost("/clothes/list", query);
+}
+
+/**
+ * 删除衣服/批量
+ * @param data list[{id: ,src: 图片名称}]
+ * @returns
+ */
+export function deleteClothes(data: { id: string; src: string }[]) {
+    return claireMultiDelete("/clothes/delete", data);
 }

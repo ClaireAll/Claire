@@ -15,18 +15,24 @@ export const Claire = {
         3: "秋",
         4: "冬",
     },
+    navigatorKey: {
+        home: "home",
+        clothes: "clothes",
+        pants: "pants",
+        books: "books",
+    },
 };
 
 /** 导航 */
 export const ClaireNavigator: MenuProps["items"] = [
     {
         label: <NavLink to="/">主页</NavLink>,
-        key: "home",
+        key: Claire.navigatorKey.home,
         icon: <HomeOutlined />,
     },
     {
         label: <NavLink to="/clothes">衣服</NavLink>,
-        key: "clothes",
+        key: Claire.navigatorKey.clothes,
         icon: (
             <ClaireIcon
                 style={{ fontSize: "20px", margin: "0 -4px 0 -2px" }}
@@ -36,7 +42,7 @@ export const ClaireNavigator: MenuProps["items"] = [
     },
     {
         label: <NavLink to="/pants">裤子</NavLink>,
-        key: "pants",
+        key: Claire.navigatorKey.pants,
         icon: (
             <ClaireIcon
                 style={{ fontSize: "20px", margin: "0 -3px 0 -2px" }}
@@ -46,7 +52,7 @@ export const ClaireNavigator: MenuProps["items"] = [
     },
     {
         label: <NavLink to="/books">书籍</NavLink>,
-        key: "books",
+        key: Claire.navigatorKey.books,
         icon: (
             <ClaireIcon
                 style={{ fontSize: "18px", margin: "0 -4px 0 0" }}
@@ -93,7 +99,16 @@ export enum DateType {
 /** 排列方式 */
 export enum ShowType {
     /** 卡片视图 */
-    Card = 'card',
+    Card = "card",
     /** 表格视图 */
-    Table = 'table',
+    Table = "table",
+}
+
+/** 排序方式 */
+export enum SortType {
+    NONE = 0,
+    /** 升序 */
+    ASC = 1,
+    /** 降序 */
+    DESC = 2,
 }

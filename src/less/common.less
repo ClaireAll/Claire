@@ -1,11 +1,69 @@
 :root {
 	--theme-color: #00d415; // 主题色
 	--theme-color-rgb: 0, 212, 21; // 主题色rgb
+	--theme-color-hs: 126, 100%;
+	--theme-color-l: 42%;
 }
+
+@background: #eeeeee;
+@error-color: #c00000;
+@error-color-light: #f10000;
+@theme-color: var(--theme-color);
+@theme-color-70: rgba(var(--theme-color-rgb), 0.7);
+@theme-color-50: rgba(var(--theme-color-rgb), 0.5);
+@theme-deep-color: hsl(var(--theme-color-hs), calc(var(--theme-color-l) / 2));
+
+.hover-visible(@cls) {
+	& .@{cls} {
+		visibility: hidden;
+	}
+
+	&:hover {
+		& .@{cls} {
+			visibility: visible;
+		}
+	}
+}
+
+.hover-visible-container {
+	&:where(:not(&:hover)) .hover-visible-item {
+	  display: none;
+	}
+
+	& .hover-visible-item {
+	  visibility: hidden;
+	}
+
+	&:hover .hover-visible-item {
+	  visibility: visible;
+	}
+  }
 
 // 提示文字色
 .tip {
 	color: #c8c8c8;
+}
+
+.c-icon {
+	color: @theme-color;
+}
+
+.f-icon {
+	background-color: @theme-deep-color;
+	color: white;
+
+	&:hover {
+		background-color: @theme-color;
+	}
+}
+
+.error-icon {
+	background-color: @error-color;
+	color: white;
+
+	&:hover {
+		background-color: @error-color-light  !important;
+	}
 }
 
 .dark {
@@ -13,8 +71,3 @@
 		color: #8b8b8b
 	}
 }
-
-@background: #eeeeee;
-@theme-color: var(--theme-color);
-@theme-color-70: rgba(var(--theme-color-rgb), 0.7);
-@theme-color-50: rgba(var(--theme-color-rgb), 0.5);
