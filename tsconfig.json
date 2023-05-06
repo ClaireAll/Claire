@@ -36,6 +36,9 @@
 			"@service": [
 				"src/common/service.tsx"
 			],
+			"@provider/*": [
+				"src/provider/*"
+			],
 		},
 	},
 	"include": [

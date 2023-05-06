@@ -7,13 +7,22 @@ import _ from "lodash";
 import { PlusOutlined } from "@ant-design/icons";
 
 export interface ClothesPopupData {
+    id?: string;
     url: string;
     price: number;
     quarter: Quarter;
 }
 
-let ClothesPopup = (props: any, ref: any) => {
-    const { addFunc, popupType } = props;
+interface ClairePopupProps {
+    ref?: any;
+    addFunc: Function;
+    editFunc: Function;
+    popupType: Function;
+}
+
+let ClothesPopup = (props: ClairePopupProps, ref: any) => {
+    const { addFunc, popupType, editFunc } = props;
+    const [id, setId] = useState("");
     const [price, setPrice] = useState(0);
     const [url, setUrl] = useState(""); // 图片名称
     const [quarter, setQuarter] = useState(Quarter.Spring);
@@ -26,6 +35,7 @@ let ClothesPopup = (props: any, ref: any) => {
             setUrl(url);
             setPrice(price);
             setQuarter(quarter);
+            data.id && setId(data.id);
             setShowModel(true);
         },
     }));
@@ -56,7 +66,9 @@ let ClothesPopup = (props: any, ref: any) => {
             open={showModel}
             onCancel={() => setShowModel(false)}
             onOk={() => {
-                popupType === Operate.Add && addFunc({ url: url, price, quarter });
+                popupType() === Operate.Add
+                    ? addFunc({ url, price, quarter })
+                    : editFunc({ url, price, quarter, id });
                 setShowModel(false);
             }}
         >
@@ -144,7 +156,7 @@ let ClothesPopup = (props: any, ref: any) => {
             </Form>
         </Modal>
     );
-}
+};
 
 // @ts-ignore
 ClothesPopup = forwardRef(ClothesPopup);

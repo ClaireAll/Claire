@@ -70,6 +70,17 @@ export function addClothes(data: ClothesAddData) {
     return clairePost("/clothes/add", data);
 }
 
+export interface ClothesEditData extends ClothesAddData {
+    id: string;
+}
+
+/**
+ * 编辑衣服
+ */
+export function editClothes(data: ClothesEditData) {
+    return clairePost("/clothes/edit", data);
+}
+
 /**
  * 删除图片
  */
@@ -109,4 +120,32 @@ export function getClothesList(query: ClothesListQuery) {
  */
 export function deleteClothes(data: { id: string; src: string }[]) {
     return claireMultiDelete("/clothes/delete", data);
+}
+
+/**
+ * 添加裤子
+ */
+export function addPants(data: ClothesAddData) {
+    return clairePost("/pants/add", data);
+}
+
+/**
+ * 编辑裤子
+ */
+export function editPants(data: ClothesEditData) {
+    return clairePost("/pants/edit", data);
+}
+
+/**
+ * 分页获取裤子
+ */
+export function getPantsList(query: ClothesListQuery) {
+    return clairePost("/pants/list", query);
+}
+
+/**
+ * 删除裤子/批量
+ */
+export function deletePants(data: { id: string; src: string }[]) {
+    return claireMultiDelete("/pants/delete", data);
 }

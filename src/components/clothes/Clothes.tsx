@@ -17,6 +17,7 @@ import {
     ROOT,
     addClothes,
     deleteClothes,
+    editClothes,
     getClothesList,
 } from "@api";
 import { useEffect, useRef, useState } from "react";
@@ -55,6 +56,7 @@ export function Clothes() {
     const [total, setTotal] = useState(0); // 列表总数
     const [clothesList, setList] = useState([]); // 展示的clothes列表
     const [ids, setIds] = useState<{ id: string; src: string }[]>([]); // 需要删除的clothes ids
+    let isEditing: boolean = false;
 
     /** 获取列表 */
     const getList = () => {
@@ -80,6 +82,25 @@ export function Clothes() {
             };
             addClothes(query).then(() => {
                 message.success("添加成功~");
+                getList();
+            });
+        }
+    };
+
+    /** 编辑clothes */
+    const handleEdit = (data: ClothesPopupData) => {
+        if (_.isEmpty(data.url)) {
+            message.warning("主人，请上传一张图片哦~");
+        } else {
+            const { id, url, price, quarter } = data;
+            const query = {
+                id: id || '',
+                pic: url,
+                price,
+                quarter,
+            };
+            editClothes(query).then(() => {
+                message.success("编辑成功~");
                 getList();
             });
         }
@@ -231,8 +252,9 @@ export function Clothes() {
                     </Row>
                     <ClothesPopup
                         ref={modelRef}
-                        popupType={Operate.Add}
+                        popupType={() => isEditing ? Operate.Edit : Operate.Add}
                         addFunc={(data: ClothesPopupData) => handleAdd(data)}
+                        editFunc={(data: ClothesPopupData) => handleEdit(data)}
                     />
                 </Card>
             </div>
@@ -277,6 +299,17 @@ export function Clothes() {
                                             shape="circle"
                                             type="primary"
                                             icon={<EditOutlined />}
+                                            onClick={() => {
+                                                isEditing = true;
+                                                const { id, pic, price, quarter } = clothes;
+                                                // @ts-ignore
+                                                modelRef.current.open({
+                                                    id,
+                                                    url: pic,
+                                                    price,
+                                                    quarter,
+                                                });
+                                            }}
                                         />
                                     </div>
                                 </div>

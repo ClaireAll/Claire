@@ -1,3 +1,7 @@
 export function Books() {
-    return (<div>books</div>);
+    return (
+        <div className="book-container">
+
+        </div>
+    );
 }

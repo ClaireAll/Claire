@@ -334,11 +334,15 @@ module.exports = function (webpackEnv) {
                     "scheduler/tracing": "scheduler/tracing-profiling",
                 }),
                 ...(modules.webpackAliases || {}),
-                less: path.resolve(__dirname, '../src/less/common.less'),
-                '@enum': path.resolve(__dirname, '../src/common/enum.tsx'),
-                '@font': path.resolve(__dirname, '../src/assets/font/font.tsx'),
-                '@api': path.resolve(__dirname, '../src/api.tsx'),
-                '@service': path.resolve(__dirname, '../src/common/service.tsx'),
+                less: path.resolve(__dirname, "../src/less/common.less"),
+                "@enum": path.resolve(__dirname, "../src/common/enum.tsx"),
+                "@font": path.resolve(__dirname, "../src/assets/font/font.tsx"),
+                "@api": path.resolve(__dirname, "../src/api.tsx"),
+                "@service": path.resolve(
+                    __dirname,
+                    "../src/common/service.tsx"
+                ),
+                "@provider/*": path.resolve(__dirname, "../src/provider/*"),
             },
             plugins: [
                 // Prevents users from importing files from outside of src/ (or node_modules/).
