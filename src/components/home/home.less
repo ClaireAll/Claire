@@ -3,9 +3,13 @@
 .claire-home {
     padding: 20px;
 
-    .claire-navigation {
-        height: calc(100vh - 40px);
+    .home-navigation {
         min-width: 80px;
+        transition: flex .5s, flex-basis .5s, flex-shrink .5s, flex-grow .5s, max-width .5s;
+
+        .claire-navigation {
+            height: calc(100vh - 40px);
+        }
     }
 
     .claire-content {

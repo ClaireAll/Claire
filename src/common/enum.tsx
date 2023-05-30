@@ -57,19 +57,19 @@ export enum SortType {
 /** 书本标签 */
 export enum BookLabels {
     /** 电子书 */
-    E_Book = 1,
+    E_Book = 'A',
     /** 实体书 */
-    P_Book = 2,
+    P_Book = 'B',
     /** code */
-    CODE = 3,
+    CODE = 'C',
     /** 技能类 */
-    SKILL = 4,
+    SKILL = 'D',
     /** 知识类 */
-    KNOWLEDGE = 5,
+    KNOWLEDGE = 'E',
     /** 实用类 */
-    USEFUL = 6,
+    USEFUL = 'F',
     /** 其它 */
-    OTHER = 100,
+    OTHER = 'X',
 }
 
 export const Claire = {

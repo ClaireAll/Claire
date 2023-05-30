@@ -1,5 +1,60 @@
 @import '~less';
 
 .book-container {
-    height: 100%;
+    position: absolute;
+    inset: 0;
+    left: 20px;
+    background-color: burlywood;
+    border-radius: 8px;
+    box-shadow: 0 0 10px #999;
+
+    .left-page,
+    .right-page {
+        position: absolute;
+        left: 0px;
+        top: 0px;
+        bottom: 0px;
+        width: 50%;
+        background-color: burlywood;
+        border-radius: 8px 0 0 8px;
+
+        display: flex;
+    }
+
+    .right-page {
+        left: unset;
+        right: 0px;
+        background-color: burlywood;
+        border-radius: 0 8px 8px 0;
+
+        &::before {
+            /* 设置折角 */
+            position: absolute;
+            bottom: 0;
+            right: 0;
+
+            content: "";
+            width: 0;
+            border: 0 solid;
+            border-top-left-radius: 10px;
+            border-color: rgba(0, 0, 0, 0.2) transparent;
+            -webkit-transition: border 1s ease;
+        }
+
+        &:hover::before {
+            border-right-width: 10vh;
+            border-top-width: 10vh;
+            border-top-left-radius: 8px;
+        }
+    }
+
+    .middle-gap {
+        top: 0px;
+        bottom: 0px;
+        position: absolute;
+        left: 50%;
+        width: 1px;
+        background-color: #766248;
+        box-shadow: 0 0 10px 1px black;
+    }
 }

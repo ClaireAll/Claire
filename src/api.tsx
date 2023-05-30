@@ -1,4 +1,4 @@
-import { Quarter, SortType } from "@enum";
+import { BookLabels, Quarter, SortType } from "@enum";
 
 /** 接口根地址 */
 export const ROOT = "http://localhost:9000";
@@ -148,4 +148,32 @@ export function getPantsList(query: ClothesListQuery) {
  */
 export function deletePants(data: { id: string; src: string }[]) {
     return claireMultiDelete("/pants/delete", data);
+}
+
+export interface BookListQuery {
+    /** 价格区间 */
+    price: {
+        min?: number;
+        max?: number;
+        sort?: SortType;
+    };
+    /** 添加时间段 */
+    addDate: {
+        min?: string;
+        max?: string;
+        sort?: SortType;
+    };
+    /** 书籍分类 */
+    labels?: BookLabels[];
+    /** 书名搜索 */
+    keyword?: string;
+    page: number;
+    pageSize: number;
+}
+
+/**
+ * 分页获取书籍
+ */
+export function getBookList(query: BookListQuery) {
+    return clairePost("/books/list", query);
 }

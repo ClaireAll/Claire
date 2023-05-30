@@ -3,7 +3,7 @@ import { PlatHome } from "./plathome.tsx/PlatHome";
 import { Navigation } from "../menu/Navigation";
 import "./home.less";
 import { useState } from "react";
-import { LeftCircleOutlined } from "@ant-design/icons";
+import { LeftCircleOutlined, RightCircleOutlined } from "@ant-design/icons";
 import { HomeContext } from "../../provider/HomeProvider";
 
 export function ClaireHome() {
@@ -12,7 +12,7 @@ export function ClaireHome() {
     return (
         <HomeContext.Provider value={{ fold }}>
             <Row wrap={false} className="claire-home">
-                <Col span={fold ? 2 : 5} className="claire-navigation">
+                <Col span={fold ? 2 : 5} className="home-navigation">
                     <div className="claire-navigation">
                         <Navigation />
                         {/* 折叠菜单面板按钮 */}
@@ -20,7 +20,7 @@ export function ClaireHome() {
                             type="dashed"
                             className="fold-icon"
                             shape="circle"
-                            icon={<LeftCircleOutlined />}
+                            icon={fold ? <RightCircleOutlined /> : <LeftCircleOutlined />}
                             onClick={() => {
                                 setFold(!fold);
                             }}
